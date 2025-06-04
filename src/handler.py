@@ -3,7 +3,8 @@ import runpod
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-LOCAL_URL = "http://127.0.0.1:3000/sdapi/v1"
+BASE_URL = "http://127.0.0.1:3000"
+SD_API_URL = f"{BASE_URL}/sdapi/v1"
 
 automatic_session = requests.Session()
 retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
@@ -36,11 +37,26 @@ def wait_for_service(url):
 
 
 def run_inference(inference_request):
-    """
-    Run inference on a request.
-    """
-    response = automatic_session.post(url=f'{LOCAL_URL}/txt2img',
-                                      json=inference_request, timeout=600)
+    """Run txt2img inference."""
+    response = automatic_session.post(
+        url=f"{SD_API_URL}/txt2img",
+        json=inference_request,
+        timeout=600,
+    )
+    if not response.ok:
+        raise RuntimeError(response.text)
+    return response.json()
+
+
+def run_birefnet_single(biref_request):
+    """Forward a request to the BiRefNet single endpoint."""
+    response = automatic_session.post(
+        url=f"{BASE_URL}/birefnet/single",
+        json=biref_request,
+        timeout=600,
+    )
+    if not response.ok:
+        raise RuntimeError(response.text)
     return response.json()
 
 
@@ -48,17 +64,17 @@ def run_inference(inference_request):
 #                                RunPod Handler                                #
 # ---------------------------------------------------------------------------- #
 def handler(event):
-    """
-    This is the handler function that will be called by the serverless.
-    """
+    """Dispatch requests to Automatic1111 or BiRefNet."""
+    action = event.get("action", "txt2img")
+    payload = event.get("input", {})
 
-    json = run_inference(event["input"])
+    if action == "birefnet_single":
+        return run_birefnet_single(payload)
 
-    # return the output that you want to be returned like pre-signed URLs to output artifacts
-    return json
+    return run_inference(payload)
 
 
 if __name__ == "__main__":
-    wait_for_service(url=f'{LOCAL_URL}/sd-models')
+    wait_for_service(url=f"{SD_API_URL}/sd-models")
     print("WebUI API Service is ready. Starting RunPod Serverless...")
     runpod.serverless.start({"handler": handler})

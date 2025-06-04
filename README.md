@@ -28,3 +28,26 @@ Here's an example payload to generate an image:
   }
 }
 ```
+
+## Build
+
+```bash
+docker build -t worker-a1111 .
+```
+
+## Run
+
+```bash
+docker run --gpus all -p 3000:3000 worker-a1111
+```
+
+The API will be at `http://localhost:3000`.
+
+### Background Removal
+
+```json
+{
+  "action": "birefnet_single",
+  "input": {}
+}
+```

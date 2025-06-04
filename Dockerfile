@@ -5,8 +5,9 @@ FROM alpine/git:2.43.0 as download
 
 # NOTE: CivitAI usually requires an API token, so you need to add it in the header
 #       of the wget command if you're using a model from CivitAI.
-RUN apk add --no-cache wget && \
-    wget -q -O /model.safetensors https://huggingface.co/Lykon/dreamshaper-xl-lightning/resolve/main/DreamShaperXL_Lightning.safetensors
+RUN apk add --no-cache wget curl && \
+    wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
+    curl -L -o /tlrs-style.safetensors "https://drive.google.com/uc?id=10dZE0yy_W1k5Qjtk_bZ8_tQS7ZbCC2i0&export=download"
     
 
 # ---------------------------------------------------------------------------- #
@@ -34,6 +35,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     git reset --hard ${A1111_RELEASE} && \
     pip install xformers && \
     pip install -r requirements_versions.txt && \
+    git clone https://github.com/dimitribarbot/sd-webui-birefnet.git extensions/sd-webui-birefnet && \
+    mkdir -p models/Lora && \
+    mv /tlrs-style.safetensors models/Lora/ && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
 COPY --from=download /model.safetensors /model.safetensors
