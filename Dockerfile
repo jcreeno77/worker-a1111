@@ -6,8 +6,9 @@ FROM alpine/git:2.43.0 as download
 # NOTE: CivitAI usually requires an API token, so you need to add it in the header
 #       of the wget command if you're using a model from CivitAI.
 RUN apk add --no-cache wget curl && \
-    wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
-    curl -L -o /tlrs-style.safetensors "https://drive.google.com/uc?id=10dZE0yy_W1k5Qjtk_bZ8_tQS7ZbCC2i0&export=download"
+    wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" 
+    # && \
+    #curl -L -o /tlrs-style.safetensors "https://drive.google.com/uc?id=10dZE0yy_W1k5Qjtk_bZ8_tQS7ZbCC2i0&export=download"
     
 
 # ---------------------------------------------------------------------------- #
