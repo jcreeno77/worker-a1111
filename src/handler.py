@@ -69,6 +69,7 @@ def handler(event):
     action = event.get("action", "txt2img")
     print("ACTION")
     print(action)
+    return action
     payload = event.get("input", {})
 
     if action == "birefnet_single":
