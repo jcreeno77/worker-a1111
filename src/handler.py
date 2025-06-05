@@ -64,8 +64,11 @@ def run_birefnet_single(biref_request):
 #                                RunPod Handler                                #
 # ---------------------------------------------------------------------------- #
 def handler(event):
+    print(event)
     """Dispatch requests to Automatic1111 or BiRefNet."""
     action = event.get("action", "txt2img")
+    print("ACTION")
+    print(action)
     payload = event.get("input", {})
 
     if action == "birefnet_single":
