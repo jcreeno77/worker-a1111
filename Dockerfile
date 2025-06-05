@@ -37,8 +37,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install xformers && \
     pip install -r requirements_versions.txt && \
     git clone https://github.com/dimitribarbot/sd-webui-birefnet.git extensions/sd-webui-birefnet && \
-    #mkdir -p models/Lora && \
-    #mv /tlrs-style.safetensors models/Lora/ && \
+    mkdir -p models/Lora && \
+    mv /tlrs-style.safetensors models/Lora/ && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
 COPY --from=download /model.safetensors /model.safetensors
