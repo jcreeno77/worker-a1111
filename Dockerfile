@@ -7,7 +7,7 @@ FROM alpine/git:2.43.0 as download
 #       of the wget command if you're using a model from CivitAI.
 RUN apk add --no-cache wget curl && \
     wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
-    curl -L -o /tlrs-style.safetensors "https://for-ec2-1.s3.us-east-1.amazonaws.com/loras/TLRS_Style.safetensors"
+    wget -q -O /tlrs-style.safetensors "https://for-ec2-1.s3.us-east-1.amazonaws.com/loras/TLRS_Style.safetensors"
 
 # ---------------------------------------------------------------------------- #
 #                        Stage 2: Build the final image                        #
@@ -27,6 +27,8 @@ RUN apt-get update && \
     apt install -y \
     fonts-dejavu-core rsync git jq moreutils aria2 wget libgoogle-perftools-dev libtcmalloc-minimal4 procps libgl1 libglib2.0-0 && \
     apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && apt-get clean -y
+    
+COPY --from=download /tlrs-style.safetensors /tlrs-style.safetensors
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
