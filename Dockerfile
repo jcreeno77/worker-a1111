@@ -8,7 +8,6 @@ FROM alpine/git:2.43.0 as download
 RUN apk add --no-cache wget curl && \
     wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
     curl -L -o /tlrs-style.safetensors "https://for-ec2-1.s3.us-east-1.amazonaws.com/loras/TLRS_Style.safetensors"
-    
 
 # ---------------------------------------------------------------------------- #
 #                        Stage 2: Build the final image                        #
