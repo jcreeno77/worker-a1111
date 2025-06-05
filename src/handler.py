@@ -66,10 +66,10 @@ def run_birefnet_single(biref_request):
 def handler(event):
     print(event)
     """Dispatch requests to Automatic1111 or BiRefNet."""
-    action = event.get("action", "txt2img")
+    action = event["input"]["action"]
     print("ACTION")
     print(action)
-    return event, action
+    #return event, action
     payload = event.get("input", {})
 
     if action == "birefnet_single":
