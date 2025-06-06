@@ -39,6 +39,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements_versions.txt && \
     git clone https://github.com/dimitribarbot/sd-webui-birefnet.git extensions/sd-webui-birefnet && \
     mkdir -p models/Lora && \
+    mkdir -p models/Stable-diffusion && \
     cd .. && \
     mv TLRS_Style.safetensors stable-diffusion-webui/models/Lora/ && \
     mv model.safetensors stable-diffusion-webui/models/Stable-diffusion/
