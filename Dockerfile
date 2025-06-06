@@ -7,7 +7,7 @@ FROM alpine/git:2.43.0 as download
 #       of the wget command if you're using a model from CivitAI.
 RUN apk add --no-cache wget curl && \
     wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
-    curl -L -o /TLRS_Style.safetensors "https://for-ec2-1.s3.us-east-1.amazonaws.com/loras/TLRS_Style.safetensors"
+    wget -q -O /TLRS_Style.safetensors "https://for-ec2-1.s3.us-east-1.amazonaws.com/loras/TLRS_Style.safetensors"
 
 # ---------------------------------------------------------------------------- #
 #                        Stage 2: Build the final image                        #
@@ -29,6 +29,7 @@ RUN apt-get update && \
     apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && apt-get clean -y
     
 COPY --from=download /TLRS_Style.safetensors /TLRS_Style.safetensors
+COPY --from=download /model.safetensors /model.safetensors
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
@@ -40,10 +41,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     mkdir -p models/Lora && \
     cd .. && \
     mv TLRS_Style.safetensors stable-diffusion-webui/models/Lora/ && \
+    mv model.safetensors stable-diffusion-webui/models/Stable-diffusion/
     cd stable-diffusion-webui && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
-COPY --from=download /model.safetensors /model.safetensors
+
 
 # install dependencies
 COPY requirements.txt .
