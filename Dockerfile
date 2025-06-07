@@ -46,8 +46,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     cd stable-diffusion-webui && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
-
-
 # install dependencies
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
