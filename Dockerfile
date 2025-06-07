@@ -6,7 +6,7 @@ FROM alpine/git:2.43.0 as download
 # NOTE: CivitAI usually requires an API token, so you need to add it in the header
 #       of the wget command if you're using a model from CivitAI.
 RUN apk add --no-cache wget curl && \
-    wget -q -O /model.safetensors "https://civitai.com/api/download/models/354657?type=Model&format=SafeTensor&size=full&fp=fp16" && \
+    wget -q -O /model.safetensors "https://huggingface.co/Lykon/dreamshaper-xl-lightning/resolve/main/DreamShaperXL_Lightning.safetensors" && \
     wget -q -O /TLRS_Style.safetensors "https://get-lora.s3.us-east-1.amazonaws.com/TLRS_Style.safetensors"
 
 # ---------------------------------------------------------------------------- #
@@ -42,7 +42,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     mkdir -p models/Stable-diffusion && \
     cd .. && \
     cp TLRS_Style.safetensors stable-diffusion-webui/models/Lora/ && \
-    cp model.safetensors stable-diffusion-webui/models/Stable-diffusion/ && \
+    #cp model.safetensors stable-diffusion-webui/models/Stable-diffusion/ && \
     cd stable-diffusion-webui && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
