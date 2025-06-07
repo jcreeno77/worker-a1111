@@ -42,7 +42,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     mkdir -p models/Stable-diffusion && \
     cd .. && \
     mv TLRS_Style.safetensors stable-diffusion-webui/models/Lora/ && \
-    mv model.safetensors stable-diffusion-webui/models/Stable-diffusion/
+    #mv model.safetensors stable-diffusion-webui/models/Stable-diffusion/
     cd stable-diffusion-webui && \
     python -c "from launch import prepare_environment; prepare_environment()" --skip-torch-cuda-test
 
